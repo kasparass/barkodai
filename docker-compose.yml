@@ -1,0 +1,32 @@
+version: "3"
+services:
+    web:
+        build: .
+        ports:
+            - "8000:80"
+        depends_on:
+            - db
+    db:
+        image: mysql:5.7
+        volumes:
+            - ./barkodai.sql:/docker-entrypoint-initdb.d/barkodai.sql
+        restart: always
+        environment:
+            MYSQL_DATABASE: barkodai
+            MYSQL_USER: sa
+            MYSQL_PASSWORD: abc123
+            MYSQL_ROOT_PASSWORD: abc123
+        ports:
+            - '3306:3306'
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: pma
+        links:
+            - db
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_ARBITRARY: 1
+        restart: always
+        ports:
+            - '8001:80'
