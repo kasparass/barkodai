@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Barkodai.Models.Item>
+@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <h1 class="display-4">This is a home page</h1>
+    <h4 class="display-4">For now, it displays items loaded from a JSON file via ItemsAPI mockup class, IItemsAPI interface</h4>
+</div>
+<ul class="list-group">
+    @foreach (var test in Model)
+    {
+        <li class="list-group-item">
+            <p>@test.title</p>
+            <p>@test.pav_adresas</p>
+        </li>
+    }
+</ul>

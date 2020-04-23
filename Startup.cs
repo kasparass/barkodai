@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Barkodai.Core;
 using Barkodai.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,12 +27,15 @@ namespace Barkodai
         {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<ITestRepository, TestRepository>();
+            services.AddSingleton<IItemsAPI, ItemsAPIJSONMock>();
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            env.EnvironmentName = "Development";
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

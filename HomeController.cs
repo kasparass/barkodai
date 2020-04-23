@@ -7,28 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Barkodai.Models;
 using Barkodai.Repositories;
+using Barkodai.Core;
 
 namespace Barkodai.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ITestRepository testRepository;
+        private readonly IItemsAPI itemsAPI;
 
-        public HomeController(ILogger<HomeController> logger, ITestRepository testRepository)
+        public HomeController(ILogger<HomeController> logger, IItemsAPI itemsAPI)
         {
             _logger = logger;
-            this.testRepository = testRepository;
+            this.itemsAPI = itemsAPI;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(testRepository.GetTests());
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return View("~/Core/UserMainView.cshtml", await itemsAPI.getItems());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
