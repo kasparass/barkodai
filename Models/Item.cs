@@ -7,7 +7,9 @@ namespace Barkodai.Models
 {
     public class Item
     {
+        public int id { get; set; }
         public string title { get; set; }
-        public string pav_adresas { get; set; }
+        public string image_adress { get; set; }
+        public string category { get; set; }
     }
 }

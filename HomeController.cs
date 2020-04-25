@@ -14,17 +14,15 @@ namespace Barkodai.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IItemsAPI itemsAPI;
 
-        public HomeController(ILogger<HomeController> logger, IItemsAPI itemsAPI)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            this.itemsAPI = itemsAPI;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View("~/Core/UserMainView.cshtml", await itemsAPI.getItems());
+            return View("~/Core/UserMainView.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

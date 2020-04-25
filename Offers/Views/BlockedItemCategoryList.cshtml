@@ -1,0 +1,72 @@
+﻿@model Barkodai.ViewModels.BlockListVM
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Block List";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Block List</h1>
+
+<ul class="list-group">
+    @foreach (var item in Model.blockList.items)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            @item.title
+        </li>
+    }
+</ul>
+
+<hr />
+@if (Model.items == null)
+{
+    <a class="text-center" asp-area="" asp-controller="Block" asp-action="ListItems">Show Item list</a>
+}
+else
+{
+    <h1>Items</h1>
+    <table class="table table-hover text-center">
+        <thead>
+            <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Title</th>
+                <th scope="col">
+                    <form method="get" asp-action="Filter" asp-controller="Block">
+                        <select id="filter_categories" name="filter_categories" class="selectpicker" multiple data-live-search="true">
+                            @foreach (var category in Model.items.Select(i => i.category.ToLower()).Union(Model.hiddenCategories).Distinct())
+                            {
+                                @if (Model.hiddenCategories.Contains(category))
+                                {
+                                    <option value="@category.ToLower()">@category</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.ToLower()" selected>@category</option>
+                                }
+                            }
+                        </select>
+                    </form>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.items.Where(i => !Model.hiddenCategories.Contains(i.category.ToLower())))
+            {
+                <tr>
+                    <td><img src="@item.image_adress" height="60" /></td>
+                    <td class="align-middle" style="font-size:1.8rem">@item.title</td>
+                    <td class="align-middle" style="font-size:1.8rem">@item.category</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <script>
+        $('select').selectpicker();
+        $('#filter_categories').change(function () {
+            this.form.submit();
+        });
+    </script>
+}

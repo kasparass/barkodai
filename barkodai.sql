@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Apr 24, 2020 at 07:16 PM
--- Server version: 5.7.29
--- PHP Version: 7.4.4
+-- Generation Time: Apr 25, 2020 at 09:50 PM
+-- Server version: 5.7.28
+-- PHP Version: 7.2.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -29,7 +30,17 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `blocked_lists` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blocked_list_items`
+--
+
+CREATE TABLE `blocked_list_items` (
+  `blocked_list_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -221,6 +232,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`, `first_name`, `last_name`, `phone`, `is_admin`, `is_worker`, `is_blocked`) VALUES
+(99, 'mrTest@gmail.com', 'thisIsSoFingHashed', 'Tom', 'Testovic', '+37064206942', 0, 0, 0);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -229,8 +247,14 @@ CREATE TABLE `users` (
 --
 ALTER TABLE `blocked_lists`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `blocked_lists_items_id_fk` (`item_id`),
   ADD KEY `blocked_lists_users_id_fk` (`user_id`);
+
+--
+-- Indexes for table `blocked_list_items`
+--
+ALTER TABLE `blocked_list_items`
+  ADD PRIMARY KEY (`blocked_list_id`,`item_id`),
+  ADD KEY `blocked_list_item_item_id_fk` (`item_id`);
 
 --
 -- Indexes for table `carts`
@@ -412,7 +436,7 @@ ALTER TABLE `shop_items`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- Constraints for dumped tables
@@ -422,8 +446,14 @@ ALTER TABLE `users`
 -- Constraints for table `blocked_lists`
 --
 ALTER TABLE `blocked_lists`
-  ADD CONSTRAINT `blocked_lists_items_id_fk` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`),
   ADD CONSTRAINT `blocked_lists_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `blocked_list_items`
+--
+ALTER TABLE `blocked_list_items`
+  ADD CONSTRAINT `blocked_list_item_blocked_lists_id_fk` FOREIGN KEY (`blocked_list_id`) REFERENCES `blocked_lists` (`id`),
+  ADD CONSTRAINT `blocked_list_item_item_id_fk` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`);
 
 --
 -- Constraints for table `carts`

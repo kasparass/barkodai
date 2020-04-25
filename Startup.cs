@@ -27,8 +27,9 @@ namespace Barkodai
         {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<ITestRepository, TestRepository>();
-            services.AddSingleton<IItemsAPI, ItemsAPIJSONMock>();
             services.AddControllersWithViews();
+
+            DB.connectionString = Configuration.GetConnectionString("DefaultConnection");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

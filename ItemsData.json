@@ -1,18 +1,27 @@
 ﻿[
   {
     "title": "sprotai",
-    "pav_adresas": "???"
+    "image_adress": "https://www.thedevonfishmonger.co.uk/asps/resources/big/129-1.jpg",
+    "category": "toys"
   },
   {
     "title": "duona",
-    "pav_adresas": "???"
+    "image_adress": "https://www.biggerbolderbaking.com/wp-content/uploads/2020/04/Hearty-Yeast-Free-Bread-WS-Thumbnail.jpg",
+    "category": "toys"
   },
   {
     "title": "puodas",
-    "pav_adresas": "???"
+    "image_adress": "https://images-na.ssl-images-amazon.com/images/I/51joSk74l0L._AC_SX522_.jpg",
+    "category": "food"
   },
   {
     "title": "tarakonas",
-    "pav_adresas": "???"
+    "image_adress": "https://www.orkincanada.ca/drive/uploads/2018/09/american-cockroach-250-1.jpg",
+    "category": "food"
+  },
+  {
+    "title": "botagas",
+    "image_adress": "https://images-na.ssl-images-amazon.com/images/I/61Rfne7dHpL._AC_SL1001_.jpg",
+    "category": "sex"
   }
 ]
