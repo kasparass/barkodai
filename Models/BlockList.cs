@@ -16,75 +16,120 @@ namespace Barkodai.Models
         public IList<string> categories { get; set; }
         public User user { get; set; }
 
+        public BlockList(User owner)
+        {
+            user = owner;
+            user_id = owner.id;
+            items = new List<Item>();
+            categories = new List<string>();
+        }
+
         public async static Task<BlockList> getList(User user)
         {
-            // add some items for testing 
-            var items = await ItemsAPI.getItems();
-            return new BlockList { items = items.Take(2).ToList() };
-
-            using (MySqlConnection conn = DB.newConnection())
-            using (MySqlCommand cmd = conn.CreateCommand())
+            return await DB.doInTrasaction(async cmd =>
             {
-                await conn.OpenAsync();
-
-                MySqlTransaction transaction = conn.BeginTransaction();
-                cmd.Transaction = transaction;
-                cmd.Connection = conn;
-
-                try
+                // Initialize list as empty list
+                BlockList list = new BlockList(user)
                 {
-                    // Initialize list as empty list
-                    BlockList list = new BlockList
-                    {
-                        id = -1,
-                        user = user,
-                        user_id = user.id,
-                        categories = new List<string>(),
-                        items = new List<Item>()
-                    };
+                    id = -1,
+                };
 
-                    // Select list
-                    cmd.CommandText = "SELECT id FROM blocked_lists WHERE user_id = @id;";
-                    cmd.Parameters.AddWithValue("@id", user.id);
+                // Select list
+                cmd.CommandText = "SELECT id FROM blocked_lists WHERE user_id = @id;";
+                cmd.Parameters.AddWithValue("@id", user.id);
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (reader.Read())
+                    {
+                        list.id = reader.GetInt32(reader.GetOrdinal("id"));
+                    }
+                }
+
+                // If a list was found, try to search for it's contents
+                if (list.id != -1)
+                {
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = "SELECT item_id FROM blocked_list_items WHERE blocked_list_id = @id;";
+                    cmd.Parameters.AddWithValue("@id", list.id);
+
+                    List<int> itemIds = new List<int>();
 
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
-                        {
-                            list.id = reader.GetInt32(reader.GetOrdinal("id"));
-                        }
+                        while (reader.Read())
+                            itemIds.Add(reader.GetInt32(reader.GetOrdinal("item_id")));
                     }
 
-                    // If a list was found, try to search for it's contents
-                    if (list.id != -1)
-                    {
-                        cmd.Parameters.Clear();
-                        cmd.CommandText = "SELECT item_id FROM blocked_list_items WHERE blocked_list_id = @id;";
-                        cmd.Parameters.AddWithValue("@id", list.id);
-
-                        List<int> itemIds = new List<int>();
-
-                        using (var reader = await cmd.ExecuteReaderAsync())
-                        {
-                            while (reader.Read())
-                            {
-                                itemIds.Add(reader.GetInt32(reader.GetOrdinal("item_id")));
-                            }
-                        }
-
-                        list.items = (await ItemsAPI.getItems(itemIds)).ToList();
-                    }
-
-                    transaction.Commit();
-
-                    return list;
+                    list.items = (await ItemsAPI.getItems(itemIds)).ToList();
                 }
-                catch (Exception e)
+
+                return list;
+
+            });
+        }
+
+        public static async Task addItem(User user, int itemId)
+        {
+            await DB.doInTrasaction(async cmd =>
+            {
+                // Check if user has a list
+                int listId = -1;
+                cmd.CommandText = "SELECT id FROM blocked_lists WHERE user_id = @id;";
+                cmd.Parameters.AddWithValue("@id", user.id);
+
+                using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    transaction.Rollback();
-                    throw e;
+                    if (reader.Read())
+                    {
+                        listId = reader.GetInt32(reader.GetOrdinal("id"));
+                    }
                 }
-            }
+
+                // If user has no list, create it
+                if (listId == -1)
+                {
+                    cmd.CommandText = "INSERT INTO blocked_lists(user_id) VALUES(@id);";
+                    await cmd.ExecuteNonQueryAsync();
+                    listId = (int)cmd.LastInsertedId;
+                }
+
+                // Insert item into list
+                cmd.Parameters.Clear();
+                cmd.CommandText = "INSERT INTO blocked_list_items(blocked_list_id, item_id) VALUES(@listID, @itemID);";
+                cmd.Parameters.AddWithValue("itemID", itemId);
+                cmd.Parameters.AddWithValue("listID", listId);
+                await cmd.ExecuteNonQueryAsync();
+            });
+        }
+
+        public static async Task deleteItem(User user, int itemId)
+        {
+            await DB.doInTrasaction(async cmd =>
+            {
+                // Check if user has a list
+                int listId = -1;
+                cmd.CommandText = "SELECT id FROM blocked_lists WHERE user_id = @id;";
+                cmd.Parameters.AddWithValue("@id", user.id);
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (reader.Read())
+                    {
+                        listId = reader.GetInt32(reader.GetOrdinal("id"));
+                    }
+                }
+
+                // If user has a list, remove item from it
+                if (listId != -1)
+                {
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = "DELETE FROM blocked_list_items WHERE blocked_list_id = @listID AND item_id = @itemID;";
+                    cmd.Parameters.AddWithValue("itemID", itemId);
+                    cmd.Parameters.AddWithValue("listID", listId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            });
         }
     }
 }

@@ -21,8 +21,9 @@ namespace Barkodai.Offers.Controllers
         [ActionName("ListItems")]
         public async Task<IActionResult> openItemList()
         {
-            var vm = new BlockListVM { 
-                blockList = await BlockList.getList(Models.User.current), 
+            var vm = new BlockListVM
+            {
+                blockList = await BlockList.getList(Models.User.current),
                 items = await ItemsAPI.getItems()
             };
             applyDefaultFilters(vm);
@@ -41,9 +42,25 @@ namespace Barkodai.Offers.Controllers
             return View("~/Offers/Views/BlockedItemCategoryList.cshtml", vm);
         }
 
+        [ActionName("AddItem")]
+        public async Task<IActionResult> addItem(int id)
+        {
+            await BlockList.addItem(Models.User.current, id);
+
+            return RedirectToAction("Index");
+        }
+
+        [ActionName("RemoveItem")]
+        public async Task<IActionResult> removeItem(int id)
+        {
+            await BlockList.deleteItem(Models.User.current, id);
+
+            return RedirectToAction("Index");
+        }
+
         private void applyDefaultFilters(BlockListVM vm)
         {
-            if(vm.items.Any(i => i.category.ToLower().CompareTo("sex") == 0))
+            if (vm.items.Any(i => i.category.ToLower().CompareTo("sex") == 0))
             {
                 vm.hiddenCategories = new HashSet<string> { "sex" };
             }

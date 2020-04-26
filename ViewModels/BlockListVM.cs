@@ -11,5 +11,10 @@ namespace Barkodai.ViewModels
         public BlockList blockList { get; set; }
         public IEnumerable<Item> items { get; set; }
         public HashSet<string> hiddenCategories { get; set; }
+
+        public BlockListVM()
+        {
+            hiddenCategories = new HashSet<string>();
+        }
     }
 }

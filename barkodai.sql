@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Apr 25, 2020 at 09:50 PM
+-- Generation Time: Apr 26, 2020 at 01:03 PM
 -- Server version: 5.7.28
 -- PHP Version: 7.2.23
 
@@ -452,8 +452,7 @@ ALTER TABLE `blocked_lists`
 -- Constraints for table `blocked_list_items`
 --
 ALTER TABLE `blocked_list_items`
-  ADD CONSTRAINT `blocked_list_item_blocked_lists_id_fk` FOREIGN KEY (`blocked_list_id`) REFERENCES `blocked_lists` (`id`),
-  ADD CONSTRAINT `blocked_list_item_item_id_fk` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`);
+  ADD CONSTRAINT `blocked_list_item_blocked_lists_id_fk` FOREIGN KEY (`blocked_list_id`) REFERENCES `blocked_lists` (`id`);
 
 --
 -- Constraints for table `carts`
