@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 
 namespace Barkodai.ViewModels
 {
-    public class BlockListVM
+    public struct BlockListVM
     {
         public BlockList blockList { get; set; }
         public IEnumerable<Item> items { get; set; }
         public HashSet<string> hiddenCategories { get; set; }
-
-        public BlockListVM()
-        {
-            hiddenCategories = new HashSet<string>();
-        }
     }
 }

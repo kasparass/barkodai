@@ -16,12 +16,16 @@ namespace Barkodai.Models
         public IList<string> categories { get; set; }
         public User user { get; set; }
 
-        public BlockList(User owner)
+        public BlockList()
+        {
+            items = new List<Item>();
+            categories = new List<string>();
+        }
+
+        public BlockList(User owner) : this()
         {
             user = owner;
             user_id = owner.id;
-            items = new List<Item>();
-            categories = new List<string>();
         }
 
         public async static Task<BlockList> getList(User user)
