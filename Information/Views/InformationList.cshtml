@@ -1,0 +1,61 @@
+﻿@model Barkodai.ViewModels.BlockListVM
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Items List";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="jumbotron">
+    <table class="table table-hover text-center">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Lowest Price</th>
+                <th scope="col">Shop</th>
+                <th scope="col">
+                    <form method="get" asp-action="Filter" asp-controller="Information">
+                        <select id="filter_categories" name="filter_categories" class="selectpicker" multiple data-live-search="true">
+                            @foreach (var category in Model.items.Select(i => i.category.ToLower()).Union(Model.hiddenCategories).Distinct())
+                            {
+                                @if (Model.hiddenCategories.Contains(category))
+                                {
+                                    <option value="@category.ToLower()">@category</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.ToLower()" selected>@category</option>
+                                }
+                            }
+                        </select>
+                    </form>
+                </th>
+            </tr>
+        </thead>
+         <tbody>
+             @foreach (var item in Model.items.Where(i => !Model.blockList.items.Any(bi => bi.id == i.id)).Where(i => !Model.hiddenCategories.Contains(i.category.ToLower())))
+             {
+                 <tr>
+                     <td><img src="@item.image_address" height="60" /></td>
+                     <td class="align-middle" style="font-size: 18px;">@item.title</td>
+                     <td class="align-middle" style="font-size: 18px;">@item.shops.OrderBy(i => i.price).First().price &euro;</td>
+                     <td class="align-middle"><img src="@item.shops.OrderBy(i => i.price).First().getLogo()" width="90px"/></td>
+                     <td class="align-middle">
+                         <a class="btn btn-info">Details</a>
+                         <a class="btn btn-success">Add To Cart</a>
+                     </td>
+                 </tr>
+             }
+         </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $('select').selectpicker();
+        $('#filter_categories').change(function () {
+            this.form.submit();
+        });
+    </script>
+}

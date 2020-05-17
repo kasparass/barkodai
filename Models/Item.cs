@@ -9,7 +9,8 @@ namespace Barkodai.Models
     {
         public int id { get; set; }
         public string title { get; set; }
-        public string image_adress { get; set; }
+        public string image_address { get; set; }
         public string category { get; set; }
+        public Shop[] shops { get; set; }
     }
 }

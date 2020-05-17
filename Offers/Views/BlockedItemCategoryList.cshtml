@@ -14,7 +14,7 @@
             @foreach (var item in Model.blockList.items)
             {
                 <tr>
-                    <td><img src="@item.image_adress" height="60" /></td>
+                    <td><img src="@item.image_address" height="60" /></td>
                     <td class="align-middle" style="font-size:1.8rem">@item.title</td>
                     <td class="align-middle" style="font-size:1.8rem">@item.category</td>
                     <td class="align-middle" ><a asp-controller="Block" asp-action="RemoveItem" asp-route-id="@item.id" class="btn btn-danger">Remove</a></td>
@@ -61,7 +61,7 @@
                 @foreach (var item in Model.items.Where(i => !Model.blockList.items.Any(bi => bi.id == i.id)).Where(i => !Model.hiddenCategories.Contains(i.category.ToLower())))
                 {
                     <tr>
-                        <td><img src="@item.image_adress" height="60" /></td>
+                        <td><img src="@item.image_address" height="60" /></td>
                         <td class="align-middle" style="font-size:1.8rem">@item.title</td>
                         <td class="align-middle" style="font-size:1.8rem">@item.category</td>
                         <td class="align-middle"><a asp-controller="Block" asp-action="AddItem" asp-route-id="@item.id" class="btn btn-success">Add</a></td>
