@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,13 +37,37 @@ namespace Barkodai.Offers.Controllers
 
             return RedirectToAction("Index");
         }
-        
+
+        [ActionName("Description")]
+        public async Task<IActionResult> openItemDescription(int id)
+        {
+            Item item = await ItemsAPI.getItem(id);
+            item.averageRating = await Rating.getAverageRating(item.id);
+            item.shops = getPersistantData<ShopList>("ShopsList").shops;
+            return View("~/Information/Views/ItemDescription.cshtml", item);
+        }
+
+        [ActionName("ListShops")]
+        public async Task<IActionResult> showShopsList(int id, bool show)
+        {
+            if(show)
+            {
+                setPersistantData("ShopsList", new ShopList { shops = await ItemsAPI.getShops(id) });
+            }
+            else
+            {
+                setPersistantData("ShopsList", null);
+            }
+            
+            return RedirectToAction("Description", new { id });
+        }
+
         private BlockListVM applyFilters(BlockListVM vm, List<string> filter_categories)
         {
             vm.hiddenCategories = new HashSet<string>(vm.items.Select(i => i.category.ToLower()).Distinct().Except(filter_categories));
             return vm;
         }
-        
+
         private BlockListVM applyDefaultFilters(BlockListVM vm)
         {
             if (vm.items.Any(i => i.category.ToLower().CompareTo("sex") == 0))

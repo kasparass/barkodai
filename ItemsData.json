@@ -10,13 +10,25 @@
   },
   {
     "title": "HE Granade",
-    "image_address": "https://liquipedia.net/commons/images/7/7c/Weapon_hegrenade.png",
+    "image_address": "https://screenshots.gamebanana.com/img/ss/srends/502a611a5efd6.jpg",
     "category": "utility",
     "shops": [
-      { "name": "maxima", "price": 300 },
-      { "name": "iki", "price": 300 },
-      { "name": "rimi", "price": 300 },
-      { "name": "aibė", "price": 300 }
+      {
+        "name": "maxima",
+        "price": 300
+      },
+      {
+        "name": "iki",
+        "price": 300
+      },
+      {
+        "name": "rimi",
+        "price": 300
+      },
+      {
+        "name": "aibė",
+        "price": 300
+      }
     ]
   },
   {

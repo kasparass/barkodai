@@ -11,13 +11,28 @@ namespace Barkodai.Core
     {
         protected void setPersistantData(object data)
         {
-            TempData[GetType().ToString() + "_PersistantData"] = JsonConvert.SerializeObject(data);
+            setPersistantData(GetType().ToString() + "_PersistantData", data);
         }
 
-        protected T getPersistantData<T>() where T : struct
+        protected void setPersistantData(string name, object data)
         {
-            if (TempData[GetType().ToString() + "_PersistantData"] == null) return default(T);
-            return JsonConvert.DeserializeObject<T>(TempData[GetType().ToString() + "_PersistantData"] as string);
+            if(data is null)
+            {
+                TempData.Remove(name);
+            }
+            else
+            {
+                TempData[name] = JsonConvert.SerializeObject(data);
+            }
+        }
+
+        protected T getPersistantData<T>() where T : struct => getPersistantData<T>(GetType().ToString() + "_PersistantData");
+
+
+        protected T getPersistantData<T>(string name) where T : struct
+        {
+            if (TempData[name] == null || (TempData[name] as string) == null) return default(T);
+            return JsonConvert.DeserializeObject<T>(TempData[name] as string);
         }
 
         protected void keepPersistantData()
@@ -27,7 +42,12 @@ namespace Barkodai.Core
 
         protected bool hasPersistantData()
         {
-            return TempData[GetType().ToString() + "_PersistantData"] != null;
+            return hasPersistantData(GetType().ToString() + "_PersistantData");
+        }
+
+        protected bool hasPersistantData(string name)
+        {
+            return TempData[name] != null;
         }
     }
 }

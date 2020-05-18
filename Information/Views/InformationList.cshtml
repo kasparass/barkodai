@@ -39,10 +39,10 @@
                  <tr>
                      <td><img src="@item.image_address" height="60" /></td>
                      <td class="align-middle" style="font-size: 18px;">@item.title</td>
-                     <td class="align-middle" style="font-size: 18px;">@item.shops.OrderBy(i => i.price).First().price &euro;</td>
+                     <td class="align-middle" style="font-size: 18px;">@item.min_price &euro;</td>
                      <td class="align-middle"><img src="@item.shops.OrderBy(i => i.price).First().getLogo()" width="90px"/></td>
                      <td class="align-middle">
-                         <a class="btn btn-info">Details</a>
+                         <a asp-controller="Information" asp-action="Description" asp-route-id="@item.id" class="btn btn-info">Description</a>
                          <a class="btn btn-success">Add To Cart</a>
                      </td>
                  </tr>

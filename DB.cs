@@ -63,5 +63,29 @@ namespace Barkodai
                 }
             }
         }
+
+        public static async Task<T> doAction<T>(Func<MySqlCommand, Task<T>> action)
+        {
+            using (MySqlConnection conn = newConnection())
+            using (MySqlCommand cmd = conn.CreateCommand())
+            {
+                await conn.OpenAsync();
+                cmd.Connection = conn;
+                T result = await action.Invoke(cmd);
+                return result;
+            }
+        }
+
+        public static async Task doAction(Func<MySqlCommand, Task> action)
+        {
+            using (MySqlConnection conn = newConnection())
+            using (MySqlCommand cmd = conn.CreateCommand())
+            {
+                await conn.OpenAsync();
+                cmd.Connection = conn;
+
+                await action.Invoke(cmd);
+            }
+        }
     }
 }

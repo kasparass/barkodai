@@ -1,0 +1,81 @@
+﻿@model Barkodai.Models.Item
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Item Description";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="jumbotron">
+    <div style="display:flex; flex-direction:row">
+        <div style="flex-grow: 1;">
+            <div class="card border-primary mb-3">
+                <div class="card-header">
+                    <h2>@Model.title</h2>
+                    <p>Starting from: @Model.min_price &euro;</p>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Average rating(out of @Model.averageRating.ratingCount):</h5>
+                    <p class="card-text">Use - @Model.averageRating.use/5</p>
+                    <p class="card-text">Price - @Model.averageRating.price/5</p>
+                    <p class="card-text">Quality - @Model.averageRating.quality/5</p>
+                </div>
+            </div>
+        </div>
+        <div style="flex-grow: 1; margin:0 1rem 0 1rem">
+            <div class="card border-primary mb-3">
+                <div class="card-header">
+                    <h2>Rate</h2>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div style="display: flex; flex-direction: row">
+                            <label>Use</label>&nbsp;&nbsp;
+                            <input class="custom-range" type="range" min="0" max="5" step="1" />
+                        </div>
+                        <div style="display: flex; flex-direction: row">
+                            <label>Price</label>&nbsp;&nbsp;
+                            <input class="custom-range" type="range" min="0" max="5" step="1" />
+                        </div>
+                        <div style="display: flex; flex-direction: row">
+                            <label>Quality</label>&nbsp;&nbsp;
+                            <input class="custom-range" type="range" min="0" max="5" step="1" />
+                        </div>
+                        <a class="btn btn-primary">Rate</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <img src="@Model.image_address" width="400" />
+        </div>
+    </div>
+    <div style="margin-top: 2rem">
+        <div class="card">
+            <a class="card-header btn" asp-controller="Information" asp-action="ListShops" asp-route-id="@Model.id" asp-route-show="@(Model.shops == null)">
+                @if (Model.shops != null)
+                {
+                    <span>⯆ Shops</span>
+                }
+                else
+                {
+                    <span>⯈ Shops</span>
+                }
+            </a>
+            @if (Model.shops != null)
+            {
+                <div class="card-body">
+                    <ul class="list-group">
+                        @foreach (Barkodai.Models.Shop shop in @Model.shops)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @shop.name - @shop.price
+                                <span class="badge badge-primary"><img src="@shop.getLogo()" style="height: 3rem;" /></span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</div>
