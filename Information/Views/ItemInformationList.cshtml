@@ -1,4 +1,4 @@
-﻿@model Barkodai.ViewModels.BlockListVM
+﻿@model Barkodai.ViewModels.ItemInformationList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Items List";
@@ -34,7 +34,7 @@
             </tr>
         </thead>
          <tbody>
-             @foreach (var item in Model.items.Where(i => !Model.blockList.items.Any(bi => bi.id == i.id)).Where(i => !Model.hiddenCategories.Contains(i.category.ToLower())))
+             @foreach (var item in Model.items.Where(i => !Model.hiddenCategories.Contains(i.category.ToLower())))
              {
                  <tr>
                      <td><img src="@item.image_address" height="60" /></td>
