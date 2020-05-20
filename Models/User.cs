@@ -36,5 +36,24 @@ namespace Barkodai.Models
                 };
             }
         }
+        
+        public static async Task<int> getCartCount()
+        {
+            return await DB.doAction(async (cmd) =>
+            {
+                cmd.CommandText = "SELECT COUNT(*) AS count FROM carts INNER JOIN cart_items ci on carts.id = ci.cart_id WHERE carts.user_id = @id;";
+                cmd.Parameters.AddWithValue("@id", current.id);
+
+                int count = 0;
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (reader.Read())
+                    {
+                        count = reader.GetInt32(reader.GetOrdinal("count"));
+                    }
+                }
+                return count;
+            });
+        }
     }
 }

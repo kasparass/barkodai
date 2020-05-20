@@ -10,5 +10,8 @@ namespace Barkodai.ViewModels
     {
         public IEnumerable<Item> items { get; set; }
         public HashSet<string> hiddenCategories { get; set; }
+        public string success_message { get; set; }
+        
+        public int cart_count { get; set; }
     }
 }

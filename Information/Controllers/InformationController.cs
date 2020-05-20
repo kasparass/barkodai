@@ -12,7 +12,7 @@ namespace Barkodai.Offers.Controllers
     public class InformationController : ExtendedController
     {
         [ActionName("Index")]
-        public async Task<IActionResult> openItemList()
+        public async Task<IActionResult> openItemList(string message)
         {
             ItemInformationList il = getPersistantData<ItemInformationList>();
             il.items = await ItemsAPI.getItems();
@@ -21,6 +21,8 @@ namespace Barkodai.Offers.Controllers
                 il = applyDefaultFilters(il);
             }
             setPersistantData(il);
+            il.cart_count = await Models.User.getCartCount();
+            il.success_message = message;
             return View("~/Information/Views/ItemInformationList.cshtml", il);
         }
 
@@ -42,7 +44,7 @@ namespace Barkodai.Offers.Controllers
         {
             Item item = await ItemsAPI.getItem(id);
             item.averageRating = await Rating.getAverageRating(item.id);
-            item.shops = getPersistantData<ShopList>("ShopsList").shops;
+            // item.shops = getPersistantData<ShopList>("ShopsList").shops;
             return View("~/Information/Views/ItemDescription.cshtml", item);
         }
 
@@ -51,7 +53,7 @@ namespace Barkodai.Offers.Controllers
         {
             if(show)
             {
-                setPersistantData("ShopsList", new ShopList { shops = await ItemsAPI.getShops(id) });
+                // setPersistantData("ShopsList", new ShopList { shops = await ItemsAPI.getShops(id) });
             }
             else
             {

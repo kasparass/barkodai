@@ -3,89 +3,77 @@
     "title": "Talon Knife",
     "image_address": "https://www.killping.com/blog/wp-content/uploads/2018/08/Talon-Knife-Fade.png",
     "category": "kitchen",
-    "shops": [
-      { "name": "aibė", "price": 2000 },
-      { "name": "rimi", "price": 1990.50 }
+    "shop_items": [
+      { "id": 1, "price": 2000, "shop_id": 1 },
+      { "id": 2, "price": 1990, "shop_id": 3 }
     ]
   },
   {
     "title": "HE Granade",
     "image_address": "https://screenshots.gamebanana.com/img/ss/srends/502a611a5efd6.jpg",
     "category": "utility",
-    "shops": [
-      {
-        "name": "maxima",
-        "price": 300
-      },
-      {
-        "name": "iki",
-        "price": 300
-      },
-      {
-        "name": "rimi",
-        "price": 300
-      },
-      {
-        "name": "aibė",
-        "price": 300
-      }
+    "shop_items": [
+      { "id": 3, "price": 300, "shop_id": 1 },
+      { "id": 4, "price": 300, "shop_id": 2 },
+      { "id": 5, "price": 300, "shop_id": 3 },
+      { "id": 6, "price": 300, "shop_id": 4 }
     ]
   },
   {
     "title": "Lego",
     "image_address": "https://www.lego.com/cdn/cs/set/assets/blt35b36a3b43bf5d27/404-page-minifigure.jpg?quality=80",
     "category": "toys",
-	"shops": [
-		{ "name": "maxima", "price": 20.00 },
-		{ "name": "iki", "price": 20.30 },	
-		{ "name": "rimi", "price": 19.50 }
+	"shop_items": [
+		{ "id": 7, "price": 20.00, "shop_id": 1 },
+		{ "id": 8, "price": 20.30, "shop_id": 2 },
+		{ "id": 9, "price": 19.50, "shop_id": 4 }
 	]
   },
   {
     "title": "Pot",
     "image_address": "https://images-na.ssl-images-amazon.com/images/I/51joSk74l0L._AC_SX522_.jpg",
     "category": "kitchen",
-	"shops": [
-		{ "name": "maxima", "price": 10.50 },
-		{ "name": "iki", "price": 7.50 },	
-		{ "name": "rimi", "price": 12.50 }
+	"shop_items": [
+		{ "id": 10, "price": 10.50, "shop_id": 1 },
+		{ "id": 11, "price": 15.30, "shop_id": 2 },
+		{ "id": 12, "price": 7.00, "shop_id": 3 }
 	]
   },
   {
     "title": "Whip",
     "image_address": "https://images-na.ssl-images-amazon.com/images/I/61Rfne7dHpL._AC_SL1001_.jpg",
     "category": "sex",
-	"shops": [
-		{ "name": "aibė", "price": 8.99 },
-		{ "name": "iki", "price": 9.99 },	
-		{ "name": "rimi", "price": 9.99 }
+	"shop_items": [
+		{ "id": 13, "price": 7.50, "shop_id": 4 },
+		{ "id": 14, "price": 7.30, "shop_id": 2 },
+		{ "id": 15, "price": 7.00, "shop_id": 3 }
 	]
   },
   {
     "title": "Spoon",
     "image_address": "https://images-na.ssl-images-amazon.com/images/I/61Y-85Ei4-L._AC_SL1500_.jpg",
     "category": "kitchen",
-	"shops": [
-		{ "name": "maxima", "price": 2.45 }
+	"shop_items": [
+		{ "id": 16, "price": 2.45, "shop_id": 1 }
 	]
   },
   {
     "title": "Toy Car",
     "image_address": "https://i.ebayimg.com/images/g/XFsAAOSwvJVeRDPB/s-l640.jpg",
     "category": "toys",
-	"shops": [
-		{ "name": "maxima", "price": 3.00 },
-		{ "name": "aibė", "price": 3.50 },	
-		{ "name": "rimi", "price": 2.50 }
+	"shop_items": [
+		{ "id": 17, "price": 3.50, "shop_id": 4 },
+		{ "id": 18, "price": 3.00, "shop_id": 3 },
+		{ "id": 19, "price": 2.50, "shop_id": 2 }
 	]
   },
   {
     "title": "Cockroach",
     "image_address": "https://www.orkincanada.ca/drive/uploads/2018/09/american-cockroach-250-1.jpg",
     "category": "pets",
-	"shops": [
-		{ "name": "maxima", "price": 0.10 },
-		{ "name": "aibė", "price": 0.15 }
+	"shop_items": [
+		{ "id": 20, "price": 0.10, "shop_id": 1 },
+		{ "id": 21, "price": 0.15, "shop_id": 4 }
 	]
   }
 ]

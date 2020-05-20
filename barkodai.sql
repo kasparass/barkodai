@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Apr 26, 2020 at 01:03 PM
--- Server version: 5.7.28
--- PHP Version: 7.2.23
+-- Generation Time: May 20, 2020 at 07:49 PM
+-- Server version: 5.7.29
+-- PHP Version: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -32,6 +31,13 @@ CREATE TABLE `blocked_lists` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `blocked_lists`
+--
+
+INSERT INTO `blocked_lists` (`id`, `user_id`) VALUES
+(1, 99);
 
 -- --------------------------------------------------------
 
@@ -196,10 +202,20 @@ INSERT INTO `review_status` (`id`, `status`) VALUES
 
 CREATE TABLE `shops` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_lithuanian_ci NOT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL
+  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_lithuanian_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `shops`
+--
+
+INSERT INTO `shops` (`id`, `name`, `email`, `address`) VALUES
+(10, 'maxima', 'maxima.lt', 'Maximos g., Šakiai'),
+(11, 'iki', 'ikiiki.lt', 'Iki pasimatymo g., Kaunas'),
+(12, 'rimi', 'rimi.lt', 'Anapus kelio'),
+(13, 'aibe', 'aibe.lt', 'Griškės aibė');
 
 -- --------------------------------------------------------
 
@@ -358,19 +374,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `blocked_lists`
 --
 ALTER TABLE `blocked_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -424,7 +440,7 @@ ALTER TABLE `review_status`
 -- AUTO_INCREMENT for table `shops`
 --
 ALTER TABLE `shops`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `shop_items`
@@ -464,8 +480,7 @@ ALTER TABLE `carts`
 -- Constraints for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  ADD CONSTRAINT `cart_items_carts_id_fk` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`),
-  ADD CONSTRAINT `cart_items_shop_items_id_fk` FOREIGN KEY (`shop_item_id`) REFERENCES `shop_items` (`id`);
+  ADD CONSTRAINT `cart_items_carts_id_fk` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`);
 
 --
 -- Constraints for table `items`

@@ -20,7 +20,7 @@ namespace Barkodai.Core
             for (int i = 0; i < items.Length; i++)
             {
                 items[i].id = i;
-                items[i].min_price = items[i].shops == null || items[i].shops.Length == 0 ? 0 : items[i].shops.Min(s => s.price);
+                items[i].min_price = items[i].shop_items == null || items[i].shop_items.Length == 0 ? 0 : items[i].shop_items.Min(s => s.price);
             }
 
             return items;
@@ -36,9 +36,9 @@ namespace Barkodai.Core
             return (await getItems()).Where(i => ids.Contains(i.id)).ToArray();
         }
 
-        public static async Task<Shop[]> getShops(int item_id)
+        public static async Task<ShopItem[]> getShops(int item_id)
         {
-            return (await getItem(item_id))?.shops;
+            return (await getItem(item_id))?.shop_items;
         }
     }
 }

@@ -50,32 +50,32 @@
             <img src="@Model.image_address" width="400" />
         </div>
     </div>
-    <div style="margin-top: 2rem">
-        <div class="card">
-            <a class="card-header btn" asp-controller="Information" asp-action="ListShops" asp-route-id="@Model.id" asp-route-show="@(Model.shops == null)">
-                @if (Model.shops != null)
-                {
-                    <span>⯆ Shops</span>
-                }
-                else
-                {
-                    <span>⯈ Shops</span>
-                }
-            </a>
-            @if (Model.shops != null)
-            {
-                <div class="card-body">
-                    <ul class="list-group">
-                        @foreach (Barkodai.Models.Shop shop in @Model.shops)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @shop.name - @shop.price
-                                <span class="badge badge-primary"><img src="@shop.getLogo()" style="height: 3rem;" /></span>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
-        </div>
-    </div>
+@*     <div style="margin-top: 2rem"> *@
+@*         <div class="card"> *@
+@*             <a class="card-header btn" asp-controller="Information" asp-action="ListShops" asp-route-id="@Model.id" asp-route-show="@(Model.shops == null)"> *@
+@*                 @if (Model.shops != null) *@
+@*                 { *@
+@*                     <span>⯆ Shops</span> *@
+@*                 } *@
+@*                 else *@
+@*                 { *@
+@*                     <span>⯈ Shops</span> *@
+@*                 } *@
+@*             </a> *@
+@*             @if (Model.shops != null) *@
+@*             { *@
+@*                 <div class="card-body"> *@
+@*                     <ul class="list-group"> *@
+@*                         @foreach (Barkodai.Models.Shop shop in @Model.shops) *@
+@*                         { *@
+@*                             <li class="list-group-item d-flex justify-content-between align-items-center"> *@
+@*                                 @shop.name - @shop.price *@
+@*                                 <span class="badge badge-primary"><img src="@shop.getLogo()" style="height: 3rem;" /></span> *@
+@*                             </li> *@
+@*                         } *@
+@*                     </ul> *@
+@*                 </div> *@
+@*             } *@
+@*         </div> *@
+@*     </div> *@
 </div>
