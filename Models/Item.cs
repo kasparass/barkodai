@@ -12,6 +12,7 @@ namespace Barkodai.Models
         public string image_address { get; set; }
         public string category { get; set; }
         public double min_price { get; set; }
+        public ShopItem[] shop_items { get; set; }
         public Shop[] shops { get; set; }
         public Rating averageRating { get; set; }
     }

@@ -12,27 +12,28 @@ namespace Barkodai.Offers.Controllers
     public class InformationController : ExtendedController
     {
         [ActionName("Index")]
-        public async Task<IActionResult> openItemList()
+        public async Task<IActionResult> openItemList(string message)
         {
-            BlockListVM vm = getPersistantData<BlockListVM>();
-            vm.blockList = await BlockList.getList(Models.User.current);
-            vm.items = await ItemsAPI.getItems();
-            if (vm.hiddenCategories == null)
+            ItemInformationList il = getPersistantData<ItemInformationList>();
+            il.items = await ItemsAPI.getItems();
+            if (il.hiddenCategories == null)
             {
-                vm = applyDefaultFilters(vm);
+                il = applyDefaultFilters(il);
             }
-            setPersistantData(vm);
-            return View("~/Information/Views/InformationList.cshtml", vm);
+            setPersistantData(il);
+            il.cart_count = await Models.User.getCartCount();
+            il.success_message = message;
+            return View("~/Information/Views/ItemInformationList.cshtml", il);
         }
 
         [ActionName("Filter")]
         public IActionResult filter(List<string> filter_categories)
         {
-            BlockListVM vm = getPersistantData<BlockListVM>();
-            if (vm.items != null)
+            ItemInformationList il = getPersistantData<ItemInformationList>();
+            if (il.items != null)
             {
-                vm = applyFilters(vm, filter_categories);
-                setPersistantData(vm);
+                il = applyFilters(il, filter_categories);
+                setPersistantData(il);
             }
 
             return RedirectToAction("Index");
@@ -43,7 +44,7 @@ namespace Barkodai.Offers.Controllers
         {
             Item item = await ItemsAPI.getItem(id);
             item.averageRating = await Rating.getAverageRating(item.id);
-            item.shops = getPersistantData<ShopList>("ShopsList").shops;
+            // item.shops = getPersistantData<ShopList>("ShopsList").shops;
             return View("~/Information/Views/ItemDescription.cshtml", item);
         }
 
@@ -52,7 +53,7 @@ namespace Barkodai.Offers.Controllers
         {
             if(show)
             {
-                setPersistantData("ShopsList", new ShopList { shops = await ItemsAPI.getShops(id) });
+                // setPersistantData("ShopsList", new ShopList { shops = await ItemsAPI.getShops(id) });
             }
             else
             {
@@ -62,23 +63,23 @@ namespace Barkodai.Offers.Controllers
             return RedirectToAction("Description", new { id });
         }
 
-        private BlockListVM applyFilters(BlockListVM vm, List<string> filter_categories)
+        private ItemInformationList applyFilters(ItemInformationList il, List<string> filter_categories)
         {
-            vm.hiddenCategories = new HashSet<string>(vm.items.Select(i => i.category.ToLower()).Distinct().Except(filter_categories));
-            return vm;
+            il.hiddenCategories = new HashSet<string>(il.items.Select(i => i.category.ToLower()).Distinct().Except(filter_categories));
+            return il;
         }
 
-        private BlockListVM applyDefaultFilters(BlockListVM vm)
+        private ItemInformationList applyDefaultFilters(ItemInformationList il)
         {
-            if (vm.items.Any(i => i.category.ToLower().CompareTo("sex") == 0))
+            if (il.items.Any(i => i.category.ToLower().CompareTo("sex") == 0))
             {
-                vm.hiddenCategories = new HashSet<string> { "sex" };
+                il.hiddenCategories = new HashSet<string> { "sex" };
             }
             else
             {
-                vm.hiddenCategories = new HashSet<string>();
+                il.hiddenCategories = new HashSet<string>();
             }
-            return vm;
+            return il;
         }
     }
 }

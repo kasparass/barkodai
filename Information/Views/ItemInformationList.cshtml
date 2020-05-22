@@ -1,7 +1,8 @@
-﻿@model Barkodai.ViewModels.BlockListVM
+﻿@model Barkodai.ViewModels.ItemInformationList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Items List";
+    ViewData["CartCount"] = Model.cart_count;
 }
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,7 +14,7 @@
                 <th scope="col"></th>
                 <th scope="col">Name</th>
                 <th scope="col">Lowest Price</th>
-                <th scope="col">Shop</th>
+                <th scope="col">Available in</th>
                 <th scope="col">
                     <form method="get" asp-action="Filter" asp-controller="Information">
                         <select id="filter_categories" name="filter_categories" class="selectpicker" multiple data-live-search="true">
@@ -34,22 +35,30 @@
             </tr>
         </thead>
          <tbody>
-             @foreach (var item in Model.items.Where(i => !Model.blockList.items.Any(bi => bi.id == i.id)).Where(i => !Model.hiddenCategories.Contains(i.category.ToLower())))
+             @foreach (var item in Model.items.Where(i => !Model.hiddenCategories.Contains(i.category.ToLower())))
              {
                  <tr>
                      <td><img src="@item.image_address" height="60" /></td>
                      <td class="align-middle" style="font-size: 18px;">@item.title</td>
                      <td class="align-middle" style="font-size: 18px;">@item.min_price &euro;</td>
-                     <td class="align-middle"><img src="@item.shops.OrderBy(i => i.price).First().getLogo()" width="90px"/></td>
+                     <td class="align-middle" style="font-size: 18px;">@item.shop_items.Length @(item.shop_items.Length == 1 ? "Shop" : "Shops")</td>
                      <td class="align-middle">
                          <a asp-controller="Information" asp-action="Description" asp-route-id="@item.id" class="btn btn-info">Description</a>
-                         <a class="btn btn-success">Add To Cart</a>
+                         <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.shop_items.OrderBy(i => i.price).First().id" class="btn btn-success">Add To Cart</a>
                      </td>
                  </tr>
              }
          </tbody>
     </table>
 </div>
+
+@if(Model.success_message != null && Model.success_message != "")
+{
+    <div class="alert alert-dismissible alert-success notification-custom">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Great!</strong> @Model.success_message
+    </div>
+}
 
 @section Scripts {
     <script>
