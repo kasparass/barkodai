@@ -1,0 +1,30 @@
+@model Barkodai.ViewModels.RecommendedListVM
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Recommended item list";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="jumbotron">
+    <table class="table table-hover text-center">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Price</th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.recommendedList.items)
+            {
+                <tr>
+                    <td><img src="@item.image_address" height="60" /></td>
+                    <td class="align-middle" style="font-size:1.8rem">@item.title</td>
+                    <td class="align-middle" style="font-size:1.8rem">@item.category</td>
+                    <td class="align-middle" style="font-size:1.8rem">@item.min_price &euro;</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: db:3306
--- Generation Time: Apr 26, 2020 at 01:03 PM
--- Server version: 5.7.28
--- PHP Version: 7.2.23
+-- Host: 192.168.99.100:3306
+-- Generation Time: May 20, 2020 at 09:04 PM
+-- Server version: 5.7.30
+-- PHP Version: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -150,7 +149,17 @@ CREATE TABLE `ratings` (
 
 CREATE TABLE `recommended_lists` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recommended_list_items`
+--
+
+CREATE TABLE `recommended_list_items` (
+  `recommended_list_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -312,8 +321,14 @@ ALTER TABLE `ratings`
 --
 ALTER TABLE `recommended_lists`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `recommended_lists_items_id_fk` (`item_id`),
   ADD KEY `recommended_lists_users_id_fk` (`user_id`);
+
+--
+-- Indexes for table `recommended_list_items`
+--
+ALTER TABLE `recommended_list_items`
+  ADD PRIMARY KEY (`recommended_list_id`,`item_id`) USING BTREE,
+  ADD KEY `recommended_list_items_id_fk` (`item_id`) USING BTREE;
 
 --
 -- Indexes for table `reviews`
@@ -358,7 +373,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `blocked_lists`
 --
 ALTER TABLE `blocked_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `carts`
@@ -406,7 +421,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `recommended_lists`
 --
 ALTER TABLE `recommended_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -492,8 +507,13 @@ ALTER TABLE `ratings`
 -- Constraints for table `recommended_lists`
 --
 ALTER TABLE `recommended_lists`
-  ADD CONSTRAINT `recommended_lists_items_id_fk` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`),
   ADD CONSTRAINT `recommended_lists_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `recommended_list_items`
+--
+ALTER TABLE `recommended_list_items`
+  ADD CONSTRAINT `recommended_list_items_recommended_lists_id_fk` FOREIGN KEY (`recommended_list_id`) REFERENCES `recommended_lists` (`id`);
 
 --
 -- Constraints for table `reviews`
