@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: May 23, 2020 at 10:14 AM
+-- Generation Time: May 23, 2020 at 06:56 PM
 -- Server version: 5.7.28
 -- PHP Version: 7.2.23
 
@@ -141,6 +141,14 @@ CREATE TABLE `ratings` (
   `user_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ratings`
+--
+
+INSERT INTO `ratings` (`id`, `price`, `quality`, `use`, `user_id`, `item_id`) VALUES
+(6, 1.0, 5.0, 3.0, 1, 0),
+(15, 2.0, 2.0, 2.0, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -327,9 +335,7 @@ ALTER TABLE `order_status`
 -- Indexes for table `ratings`
 --
 ALTER TABLE `ratings`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `ratings_items_id_fk` (`item_id`),
-  ADD KEY `ratings_users_id_fk` (`user_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `recommended_lists`
@@ -388,7 +394,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `blocked_lists`
 --
 ALTER TABLE `blocked_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `carts`
@@ -430,13 +436,13 @@ ALTER TABLE `order_status`
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `recommended_lists`
 --
 ALTER TABLE `recommended_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -466,7 +472,7 @@ ALTER TABLE `shop_items`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -509,13 +515,6 @@ ALTER TABLE `orders`
   ADD CONSTRAINT `orders_order_status_id_fk` FOREIGN KEY (`status_id`) REFERENCES `order_status` (`id`),
   ADD CONSTRAINT `orders_users_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `orders_users_id_fk_2` FOREIGN KEY (`worker_id`) REFERENCES `users` (`id`);
-
---
--- Constraints for table `ratings`
---
-ALTER TABLE `ratings`
-  ADD CONSTRAINT `ratings_items_id_fk` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`),
-  ADD CONSTRAINT `ratings_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `recommended_lists`

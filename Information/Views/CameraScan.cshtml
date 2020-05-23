@@ -1,0 +1,66 @@
+﻿@model Barkodai.ViewModels.ScanVM
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Scan";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="jumbotron">
+    <div class=" row">
+        <div class="col panel panel-default">
+            <div class="panel-body">
+                <div id="my_camera" style="margin:auto"></div>
+                <!-- A button for taking snaps -->
+                <form>
+                    <input type="button" class="btn btn-success" value="Take Snapshot" onClick="take_snapshot()">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 2rem">
+        @if (Model.item != null)
+        {
+            <div class="col">
+                <p>Item found: @Model.item.title</p>
+                <a asp-controller="Information" asp-action="Description" asp-route-id="@Model.item.id" class="btn btn-info">See Item Description</a>
+            </div>
+        }
+        @if (Model.error_message != null)
+        {
+            <div class="col card text-white bg-danger mb-3" style="max-width: 20rem;">
+                <div class="card-header">Error</div>
+                <div class="card-body">
+                    <p class="card-text">@Model.error_message</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Configure a few settings and attach camera -->
+    <script language="JavaScript">
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+        Webcam.attach('#my_camera');
+    </script>
+    <!-- Code to handle taking the snapshot and displaying it locally -->
+    <script language="JavaScript">
+        function take_snapshot() {
+            // take snapshot and get image data
+            Webcam.snap(function (data_uri) {
+                Webcam.upload(data_uri,
+                    '/Information/ScanCapture',
+                    function (code, text) {
+                        $('#scan-anchor')[0].click();
+                    });
+
+            });
+        }
+    </script>
+}
