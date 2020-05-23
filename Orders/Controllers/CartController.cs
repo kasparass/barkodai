@@ -14,7 +14,7 @@ namespace Barkodai.Orders.Controllers
         [ActionName("AddToCart")]
         public async Task<IActionResult> addItemToCart(int id)
         {
-            Cart cart = await Cart.getUserCart(Models.User.current.id);
+            Cart cart = await Cart.getCart(Models.User.current.id);
             if (cart.id != -1)
             {
                 bool exists = await Cart.isItemInCart(cart.id, id);
@@ -35,15 +35,9 @@ namespace Barkodai.Orders.Controllers
         [ActionName("Index")]
         public async Task<IActionResult> getCart()
         {
-            Cart cart = await Cart.getUserCart(Models.User.current.id);
-
-            IList<CartItems> cart_items = await Cart.getCart(cart.id);
-
+            Cart cart = await Cart.getCart(Models.User.current.id);
             
-            return View("~/Orders/Views/CartView.cshtml");
+            return View("~/Orders/Views/CartView.cshtml", new CartVM { cart = cart });
         }
-
-
-
     }
 }

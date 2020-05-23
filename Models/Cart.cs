@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Barkodai.Core;
 using Barkodai.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
 
 namespace Barkodai.Models
 {
@@ -12,19 +11,16 @@ namespace Barkodai.Models
     {
         public int id { get; set; }
         public int user_id { get; set; }
-        //public IList<CartItems> items { get; set; }
+        public List<ShopItem> items { get; set; }
         
         public Cart()
         {
             this.id = -1;
-            //items = new List<CartItems>();
         }
-
-
         
-        public static async Task<Cart> getUserCart(int user_id)
+        public static async Task<Cart> getCart(int user_id)
         {
-            return await DB.doAction(async (cmd) =>
+            return await DB.doInTrasaction(async (cmd) =>
             {
                 Cart cart = new Cart();
                 cmd.CommandText = "SELECT * FROM carts WHERE user_id = @user_id LIMIT 1;";
@@ -38,6 +34,29 @@ namespace Barkodai.Models
                         cart.user_id = reader.GetInt32(reader.GetOrdinal("user_id"));
                     }
                 }
+
+                //---------------------
+                // Fetch cart items
+
+                // Fetch all possible shop items
+                IEnumerable<ShopItem> shopItems = (await ItemsAPI.getItems()).SelectMany(i => i.shop_items);
+
+                // Fetch shop item ids in the cart
+                List<int> ids = new List<int>();
+                cmd.CommandText = "SELECT * FROM cart_items WHERE cart_id = @cart_id;";
+                cmd.Parameters.AddWithValue("@cart_id", cart.id);
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while(reader.Read())
+                    {
+                        ids.Add(reader.GetInt32(reader.GetOrdinal("shop_item_id")));
+                    }
+                }
+
+                // Transform shop item ids to shop items
+                cart.items = ids.Select(i => shopItems.First(si => si.id == i)).ToList();
+
                 return cart;
             });
         }
@@ -77,38 +96,6 @@ namespace Barkodai.Models
                 cmd.Parameters.AddWithValue("@shop_item_id", shop_item_id);
                 await cmd.ExecuteNonQueryAsync();
             });
-        }
-
-        public static async Task<IList<CartItems>> getCart(int cart_id)
-        {
-            return await DB.doAction(async (cmd) =>
-            {
-                IList<CartItems> cart = new List<CartItems>();
-
-                cmd.CommandText = "SELECT * FROM cart_items where cart_id = @cart_id;";
-                cmd.Parameters.AddWithValue("@cart_id", cart_id);
-
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (reader.Read())
-                    {
-                        cart.Add(new CartItems
-                        {
-                            id = reader.GetInt32(reader.GetOrdinal("id")),
-                            cart_id = reader.GetInt32(reader.GetOrdinal("cart_id")),
-                            shop_item_id = reader.GetInt32(reader.GetOrdinal("shop_item_id")),
-                            amount = reader.GetInt32(reader.GetOrdinal("amount"))
-                        });
-                    }
-
-                }
-
-
-
-                return cart;
-            });
-
-
         }
     }
 }
