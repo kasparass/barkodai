@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Barkodai.Core;
@@ -7,7 +9,7 @@ using Barkodai.Models;
 using Barkodai.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Barkodai.Offers.Controllers
+namespace Barkodai.Information.Controllers
 {
     public class InformationController : ExtendedController
     {
@@ -51,7 +53,7 @@ namespace Barkodai.Offers.Controllers
         [ActionName("ListShops")]
         public async Task<IActionResult> showShopsList(int id, bool show)
         {
-            if(show)
+            if (show)
             {
                 // setPersistantData("ShopsList", new ShopList { shops = await ItemsAPI.getShops(id) });
             }
@@ -59,8 +61,53 @@ namespace Barkodai.Offers.Controllers
             {
                 setPersistantData("ShopsList", null);
             }
-            
+
             return RedirectToAction("Description", new { id });
+        }
+
+        [ActionName("Scan")]
+        public async Task<IActionResult> openScan()
+        {
+            if (hasPersistantData("ScanVM"))
+            {
+                return View("~/Information/Views/CameraScan.cshtml", getPersistantData<ScanVM>("ScanVM"));
+            }
+            else
+            {
+                return View("~/Information/Views/CameraScan.cshtml", new ScanVM());
+            }
+        }
+
+        [ActionName("ScanCapture")]
+        [HttpPost]
+        public async Task tryScan(string name)
+        {
+            Stream image = await getPhoto();
+            (Item item, string message) itemResult = await ItemsAPI.getItemFromPhoto(image);
+
+            setPersistantData("ScanVM", new ScanVM
+            {
+                item = itemResult.item,
+                error_message = itemResult.item == null ? itemResult.message : null
+            });
+        }
+
+        private async Task<Stream> getPhoto()
+        {
+            var files = HttpContext.Request.Form.Files;
+            if (files != null)
+            {
+                foreach (var file in files)
+                {
+                    if (!file.FileName.EndsWith("jpeg") && !file.FileName.EndsWith("jpg")) continue;
+
+                    var memoryStream = new MemoryStream();
+                    await file.CopyToAsync(memoryStream);
+                    return memoryStream;
+                }
+            }
+
+            return null;
         }
 
         private ItemInformationList applyFilters(ItemInformationList il, List<string> filter_categories)

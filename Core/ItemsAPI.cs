@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Barkodai.Core
 {
@@ -39,6 +40,18 @@ namespace Barkodai.Core
         public static async Task<ShopItem[]> getShops(int item_id)
         {
             return (await getItem(item_id))?.shop_items;
+        }
+
+        public static async Task<(Item, string)> getItemFromPhoto(Stream imageStream)
+        {
+            await Task.Delay(50);
+            if (new Random().NextDouble() < 0.5)
+            {
+                return (null, "Unable to find item from the image.");
+            }
+
+            Item[] items = await getItems();
+            return (items[new Random().Next(0, items.Length)], "Success!");
         }
     }
 }
