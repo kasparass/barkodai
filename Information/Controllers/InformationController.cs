@@ -8,6 +8,7 @@ using Barkodai.Core;
 using Barkodai.Models;
 using Barkodai.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Barkodai.Information.Controllers
 {
@@ -44,29 +45,42 @@ namespace Barkodai.Information.Controllers
         [ActionName("Description")]
         public async Task<IActionResult> openItemDescription(int id)
         {
-            Item item = await ItemsAPI.getItem(id);
-            item.averageRating = await Rating.getAverageRating(item.id);
-            // item.shops = getPersistantData<ShopList>("ShopsList").shops;
-            return View("~/Information/Views/ItemDescription.cshtml", item);
+            ItemDescriptionVM vm = new ItemDescriptionVM { 
+                item = await ItemsAPI.getItem(id), 
+                showShops = getPersistantData<bool>("description_show_shops"),
+                userRating = await Rating.getRating(Models.User.current.id, id),
+                userId = Models.User.current.id
+            };
+            vm.item.averageRating = await Rating.getAverageRating(vm.item.id);
+
+            return View("~/Information/Views/ItemDescription.cshtml", vm);
         }
 
         [ActionName("ListShops")]
-        public async Task<IActionResult> showShopsList(int id, bool show)
+        public IActionResult showShopsList(int id, bool show)
         {
-            if (show)
-            {
-                // setPersistantData("ShopsList", new ShopList { shops = await ItemsAPI.getShops(id) });
-            }
-            else
-            {
-                setPersistantData("ShopsList", null);
-            }
-
+            setPersistantData("description_show_shops", show);
             return RedirectToAction("Description", new { id });
         }
 
+        [ActionName("Rate"), HttpPost]
+        public async Task<IActionResult> submitRating(float use, float price, float quality, int user_id, int item_id)
+        {
+            Rating rating = new Rating
+            {
+                use = use,
+                price = price,
+                quality = quality,
+                user_id = user_id,
+                item_id = item_id
+            };
+            keepPersistantData();
+            await Rating.create(rating);
+            return RedirectToAction("Description", new { id = rating.item_id });
+        }
+
         [ActionName("Scan")]
-        public async Task<IActionResult> openScan()
+        public IActionResult openScan()
         {
             if (hasPersistantData("ScanVM"))
             {

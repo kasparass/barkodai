@@ -10,13 +10,15 @@
     <div class=" row">
         <div class="col panel panel-default">
             <div class="panel-body">
-                <div id="my_camera"></div>
+                <div id="my_camera" style="margin:auto"></div>
                 <!-- A button for taking snaps -->
                 <form>
                     <input type="button" class="btn btn-success" value="Take Snapshot" onClick="take_snapshot()">
                 </form>
             </div>
         </div>
+    </div>
+    <div class="row" style="margin-top: 2rem">
         @if (Model.item != null)
         {
             <div class="col">

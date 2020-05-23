@@ -14,7 +14,6 @@ namespace Barkodai.Models
         public double min_price { get; set; }
         public string barcode { get; set; }
         public ShopItem[] shop_items { get; set; }
-        public Shop[] shops { get; set; }
         public Rating averageRating { get; set; }
     }
 }
