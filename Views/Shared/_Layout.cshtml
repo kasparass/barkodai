@@ -35,9 +35,9 @@
                             </li>*@
                     </ul>
 
-                    @if(ViewData["Title"] == "Items List")
+                    @if (ViewData["Title"] == "Items List")
                     {
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Cart (@ViewData["CartCount"])</button>
+                        <a asp-area="" asp-controller="Cart" asp-action="Index" class="btn btn-secondary my-2 my-sm-0" type="submit">Cart (@ViewData["CartCount"])</a>
                     }
                 </div>
             </div>

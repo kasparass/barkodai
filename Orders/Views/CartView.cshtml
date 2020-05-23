@@ -1,0 +1,37 @@
+﻿@*@model Barkodai.ViewModels.CartItemsListVM;*@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*@{
+    ViewData["Title"] = "Items List";
+}*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="jumbotron">
+    <table class="table table-hover text-center">
+        <tbody>
+            <tr>Labas vakaras</tr>
+            @*@foreach (var item in Model.items)
+            {
+                <tr>
+                    <td><img src="@item.amount" height="60" /></td>
+                    <td class="align-middle" style="font-size: 18px;">@item.title</td>
+                    <td class="align-middle" style="font-size: 18px;">@item.min_price &euro;</td>
+                    <td class="align-middle" style="font-size: 18px;">@item.shop_items.Length @(item.shop_items.Length == 1 ? "Shop" : "Shops")</td>
+                    <td class="align-middle">
+                        <a asp-controller="Information" asp-action="Description" asp-route-id="@item.id" class="btn btn-info">Description</a>
+                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.shop_items.OrderBy(i => i.price).First().id" class="btn btn-success">Add To Cart</a>
+                    </td>
+                </tr>
+            }*@
+        </tbody>
+    </table>
+</div>
+
+@*@if (Model.success_message != null && Model.success_message != "")
+{
+    <div class="alert alert-dismissible alert-success notification-custom">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Great!</strong> @Model.success_message
+    </div>
+}*@
+

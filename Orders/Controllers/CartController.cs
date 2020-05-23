@@ -31,5 +31,19 @@ namespace Barkodai.Orders.Controllers
             
             return RedirectToAction("Index", "Information", new { message = "Item was added to the cart." });
         }
+
+        [ActionName("Index")]
+        public async Task<IActionResult> getCart()
+        {
+            Cart cart = await Cart.getUserCart(Models.User.current.id);
+
+            IList<CartItems> cart_items = await Cart.getCart(cart.id);
+
+            
+            return View("~/Orders/Views/CartView.cshtml");
+        }
+
+
+
     }
 }
