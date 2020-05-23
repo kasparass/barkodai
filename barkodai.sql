@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.99.100:3306
--- Generation Time: May 20, 2020 at 09:04 PM
--- Server version: 5.7.30
--- PHP Version: 7.4.5
+-- Host: db:3306
+-- Generation Time: May 23, 2020 at 10:14 AM
+-- Server version: 5.7.28
+-- PHP Version: 7.2.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -31,13 +32,6 @@ CREATE TABLE `blocked_lists` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `blocked_lists`
---
-
-INSERT INTO `blocked_lists` (`id`, `user_id`) VALUES
-(1, 99);
 
 -- --------------------------------------------------------
 
@@ -262,7 +256,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `first_name`, `last_name`, `phone`, `is_admin`, `is_worker`, `is_blocked`) VALUES
-(99, 'mrTest@gmail.com', 'thisIsSoFingHashed', 'Tom', 'Testovic', '+37064206942', 0, 0, 0);
+(1, '1mrTest@gmail.com', 'thisIsSoFingHashed', 'Tom', 'Testovic', '+37064206942', 0, 0, 0),
+(2, '2mrTest@gmail.com', 'thisIsSoFingHashed', 'Ana', 'Testovic', '+37064206942', 0, 0, 0),
+(3, '3mrTest@gmail.com', 'thisIsSoFingHashed', 'Bob', 'Testovic', '+37064206942', 0, 0, 0),
+(4, '4mrTest@gmail.com', 'thisIsSoFingHashed', 'Lee', 'Testovic', '+37064206942', 0, 0, 0),
+(5, '5mrTest@gmail.com', 'thisIsSoFingHashed', 'Kim', 'Testovic', '+37064206942', 0, 0, 0);
 
 --
 -- Indexes for dumped tables
@@ -396,13 +394,13 @@ ALTER TABLE `blocked_lists`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -438,7 +436,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `recommended_lists`
 --
 ALTER TABLE `recommended_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `reviews`

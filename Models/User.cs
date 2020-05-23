@@ -17,14 +17,17 @@ namespace Barkodai.Models
         public bool is_blocked { get; set; }
         public bool is_worker { get; set; }
 
+        private static User testUser;
+
         public static User current
         {
             get
             {
-                // For testing, create a fake user
+                if (testUser != null) return testUser;
+
                 return new User
                 {
-                    id = 99,
+                    id = 1,
                     email = "helloItsMe@gmail.com",
                     password = "this is totally hashed btw",
                     first_name = "Andrius",
@@ -35,6 +38,42 @@ namespace Barkodai.Models
                     is_worker = false
                 };
             }
+            set
+            {
+                testUser = value;
+            }
+        }
+
+        public static async Task<User> changeTestUser(int id)
+        {
+            User.current = await DB.doAction(async (cmd) =>
+            {
+                cmd.CommandText = "SELECT * FROM users WHERE id = @id;";
+                cmd.Parameters.AddWithValue("@id", id);
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if(reader.Read())
+                    {
+                        return new User
+                        {
+                            id = id,
+                            email = reader.GetString(reader.GetOrdinal("email")),
+                            password = reader.GetString(reader.GetOrdinal("password")),
+                            first_name = reader.GetString(reader.GetOrdinal("first_name")),
+                            last_name = reader.GetString(reader.GetOrdinal("last_name")),
+                            phone = reader.GetString(reader.GetOrdinal("phone")),
+                            is_admin = reader.GetBoolean(reader.GetOrdinal("is_admin")),
+                            is_blocked = reader.GetBoolean(reader.GetOrdinal("is_worker")),
+                            is_worker = reader.GetBoolean(reader.GetOrdinal("is_blocked"))
+                        };
+                    }
+                    throw new Exception("Unable to change test user - user not found. Requested ID: " + id);
+                    
+                }
+            });
+
+            return User.current;
         }
         
         public static async Task<int> getCartCount()

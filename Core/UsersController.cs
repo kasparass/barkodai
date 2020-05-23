@@ -12,5 +12,12 @@ namespace Barkodai.Core
         {
             return View();
         }
+
+        [ActionName("ChangeUser")]
+        public async Task<IActionResult> changeTestUser(int id)
+        {
+            Models.User user = await Models.User.changeTestUser(id);
+            return RedirectToAction("Index", "Home", new { message = "Changed test user to: " + user.id + "-" + user.first_name });
+        }
     }
 }

@@ -20,9 +20,9 @@ namespace Barkodai.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string message = null)
         {
-            return View("~/Core/UserMainView.cshtml");
+            return View("~/Core/UserMainView.cshtml", message);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
