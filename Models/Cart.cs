@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,12 +12,12 @@ namespace Barkodai.Models
         public int id { get; set; }
         public int user_id { get; set; }
         public List<ShopItem> items { get; set; }
-        
+
         public Cart()
         {
             this.id = -1;
         }
-        
+
         public static async Task<Cart> getCart(int user_id)
         {
             return await DB.doInTrasaction(async (cmd) =>
@@ -48,7 +48,7 @@ namespace Barkodai.Models
 
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         ids.Add(reader.GetInt32(reader.GetOrdinal("shop_item_id")));
                     }
@@ -75,7 +75,7 @@ namespace Barkodai.Models
                 }
             });
         }
-        
+
         public static async Task<int> create(int user_id)
         {
             return await DB.doAction(async (cmd) =>
@@ -86,13 +86,25 @@ namespace Barkodai.Models
                 return (int)cmd.LastInsertedId;
             });
         }
-        
+
         public static async Task addItemToCart(int cart_id, int shop_item_id)
         {
             await DB.doAction(async (cmd) =>
             {
                 cmd.CommandText = "INSERT INTO cart_items (cart_id, shop_item_id) VALUES (@cart_id, @shop_item_id);";
                 cmd.Parameters.AddWithValue("@cart_id", cart_id);
+                cmd.Parameters.AddWithValue("@shop_item_id", shop_item_id);
+                await cmd.ExecuteNonQueryAsync();
+            });
+        }
+
+        public static async Task deleteFromCart(int user_id, int shop_item_id)
+        {
+            Cart cart = await getCart(user_id);
+            await DB.doAction(async (cmd) =>
+            {
+                cmd.CommandText = "DELETE FROM cart_items WHERE cart_id = @cart_id AND shop_item_id = @shop_item_id;";
+                cmd.Parameters.AddWithValue("@cart_id", cart.id);
                 cmd.Parameters.AddWithValue("@shop_item_id", shop_item_id);
                 await cmd.ExecuteNonQueryAsync();
             });

@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +28,7 @@ namespace Barkodai.Orders.Controllers
                 cart.id = await Cart.create(Models.User.current.id);
                 await Cart.addItemToCart(cart.id, id);
             }
-            
+
             return RedirectToAction("Index", "Information", new { message = "Item was added to the cart." });
         }
 
@@ -36,8 +36,15 @@ namespace Barkodai.Orders.Controllers
         public async Task<IActionResult> getCart()
         {
             Cart cart = await Cart.getCart(Models.User.current.id);
-            
+
             return View("~/Orders/Views/CartView.cshtml", new CartVM { cart = cart });
+        }
+
+        [ActionName("Remove")]
+        public async Task<IActionResult> removeItem(int id)
+        {
+            await Cart.deleteFromCart(Models.User.current.id, id);
+            return RedirectToAction("Index");
         }
     }
 }
