@@ -11,6 +11,7 @@ namespace Barkodai.Models
     {
         public int id { get; set; }
         public int user_id { get; set; }
+        public bool ordered { get; set; }
         public List<ShopItem> items { get; set; }
 
         public Cart()
@@ -23,7 +24,7 @@ namespace Barkodai.Models
             return await DB.doInTrasaction(async (cmd) =>
             {
                 Cart cart = new Cart();
-                cmd.CommandText = "SELECT * FROM carts WHERE user_id = @user_id LIMIT 1;";
+                cmd.CommandText = "SELECT * FROM carts WHERE user_id = @user_id AND ordered = FALSE LIMIT 1;";
                 cmd.Parameters.AddWithValue("@user_id", user_id);
 
                 using (var reader = await cmd.ExecuteReaderAsync())
@@ -65,7 +66,7 @@ namespace Barkodai.Models
         {
             return await DB.doAction(async (cmd) =>
             {
-                cmd.CommandText = "SELECT c.id FROM cart_items INNER JOIN carts c on cart_items.cart_id = c.id WHERE shop_item_id = @sid AND c.id = @cid";
+                cmd.CommandText = "SELECT c.id FROM cart_items INNER JOIN carts c on cart_items.cart_id = c.id WHERE shop_item_id = @sid AND c.id = @cid AND c.ordered = FALSE";
                 cmd.Parameters.AddWithValue("@cid", cart_id);
                 cmd.Parameters.AddWithValue("@sid", shop_item_id);
 
@@ -106,6 +107,16 @@ namespace Barkodai.Models
                 cmd.CommandText = "DELETE FROM cart_items WHERE cart_id = @cart_id AND shop_item_id = @shop_item_id;";
                 cmd.Parameters.AddWithValue("@cart_id", cart.id);
                 cmd.Parameters.AddWithValue("@shop_item_id", shop_item_id);
+                await cmd.ExecuteNonQueryAsync();
+            });
+        }
+        
+        public static async Task changeToOrdered(int cart_id)
+        {
+            await DB.doAction(async (cmd) =>
+            {
+                cmd.CommandText = "UPDATE carts SET ordered = TRUE WHERE id = @cart_id;";
+                cmd.Parameters.AddWithValue("@cart_id", cart_id);
                 await cmd.ExecuteNonQueryAsync();
             });
         }

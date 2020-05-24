@@ -19,6 +19,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="MySql.Data" Version="8.0.19" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <Reference Include="EVP.WebToPay.ClientAPI">
+      <HintPath>EVP.WebToPay.ClientAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

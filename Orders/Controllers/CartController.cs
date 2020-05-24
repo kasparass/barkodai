@@ -33,11 +33,11 @@ namespace Barkodai.Orders.Controllers
         }
 
         [ActionName("Index")]
-        public async Task<IActionResult> getCart()
+        public async Task<IActionResult> getCart(string message, string type)
         {
             Cart cart = await Cart.getCart(Models.User.current.id);
 
-            return View("~/Orders/Views/CartView.cshtml", new CartVM { cart = cart });
+            return View("~/Orders/Views/CartView.cshtml", new CartVM { cart = cart, message = message, message_type = type });
         }
 
         [ActionName("Remove")]
@@ -46,5 +46,30 @@ namespace Barkodai.Orders.Controllers
             await Cart.deleteFromCart(Models.User.current.id, id);
             return RedirectToAction("Index");
         }
+        
+        [ActionName("Order")]
+        public async Task<IActionResult> orderCart(int id)
+        {
+            Cart cart = await Cart.getCart(Models.User.current.id);
+            string url = await PayseraAPI.pay(cart);
+            
+            return Redirect(url);
+        }
+        
+        [ActionName("OrderSuccess")]
+        public async Task<IActionResult> orderSuccess(int id)
+        {
+            await Order.create(Models.User.current.id, id);
+            await Cart.changeToOrdered(id);
+            
+            return RedirectToAction("Index", new { message = "Payment Successful", type = "success" } );
+        }
+        
+        [ActionName("OrderFailed")]
+        public async Task<IActionResult> orderFailed(int id)
+        {
+            return RedirectToAction("Index", new { message = "Order Canceled", type = "error" } );
+        }
+        
     }
 }
