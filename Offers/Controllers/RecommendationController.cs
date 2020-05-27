@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Barkodai.ViewModels;
 using System.Linq;
+using System.Timers;
+
 
 namespace Barkodai.Offers.Controllers
 {
@@ -15,12 +17,19 @@ namespace Barkodai.Offers.Controllers
         public async Task<IActionResult> openRecommendationList()
         {
             RecommendedListVM vm = getPersistantData<RecommendedListVM>();
-            // vm.recommendedList = await RecommendedList.getList(Models.User.current);
-            // if(vm.recommendedList.items.Count == 0)
-            //     await Recommendation();
-            await Recommendation();                                                     // kol kas be timerio
+            vm.recommendedList = await RecommendedList.getList(Models.User.current);
+            if(vm.recommendedList.items.Count == 0)
+                await Recommendation();
             vm.recommendedList = await RecommendedList.getList(Models.User.current);
             return View("~/Offers/Views/RecommendedItemList.cshtml", vm);
+        }
+        
+        public RecommendationController()
+        {
+            Timer t =  new Timer();
+            t.Interval = 10000;
+            t.Elapsed += new System.Timers.ElapsedEventHandler(timeEventRecommendation);
+            t.Start();
         }
 
         private async Task Recommendation()
@@ -39,9 +48,21 @@ namespace Barkodai.Offers.Controllers
             await addItems(vm);
         }
 
-        // public async static void timeEventRecommendation()
-        // {
-        // }
+        private async void timeEventRecommendation(object sender, ElapsedEventArgs e)
+        {
+            await getItems();
+            RecommendedListVM vm = getPersistantData<RecommendedListVM>();
+            vm = applyDefaultFilters(vm);
+            await getBlockList(Models.User.current);
+            if(vm.blockList != null)
+            {
+                vm = applyBlockList(vm);
+            }
+            await getRating(vm);
+            if(vm.ratings != null)
+                vm = applyRatingList(vm);
+            await addItems(vm);
+        }
 
         private async Task getItems()
         {
