@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: May 23, 2020 at 06:56 PM
--- Server version: 5.7.28
--- PHP Version: 7.2.23
+-- Generation Time: May 27, 2020 at 05:44 AM
+-- Server version: 5.7.29
+-- PHP Version: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -52,8 +51,16 @@ CREATE TABLE `blocked_list_items` (
 
 CREATE TABLE `carts` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `ordered` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`id`, `user_id`, `ordered`) VALUES
+(3, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -67,6 +74,19 @@ CREATE TABLE `cart_items` (
   `shop_item_id` int(11) NOT NULL,
   `amount` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `cart_items`
+--
+
+INSERT INTO `cart_items` (`id`, `cart_id`, `shop_item_id`, `amount`) VALUES
+(6, 3, 2, 1),
+(7, 3, 3, 1),
+(8, 3, 20, 1),
+(9, 3, 19, 1),
+(10, 3, 16, 1),
+(11, 3, 12, 1),
+(12, 3, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -104,7 +124,8 @@ CREATE TABLE `orders` (
   `address` varchar(255) NOT NULL,
   `status_id` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
-  `worker_id` int(11) DEFAULT NULL
+  `worker_id` int(11) DEFAULT NULL,
+  `cart_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -161,6 +182,13 @@ CREATE TABLE `recommended_lists` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `recommended_lists`
+--
+
+INSERT INTO `recommended_lists` (`id`, `user_id`) VALUES
+(1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -171,6 +199,19 @@ CREATE TABLE `recommended_list_items` (
   `recommended_list_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `recommended_list_items`
+--
+
+INSERT INTO `recommended_list_items` (`recommended_list_id`, `item_id`) VALUES
+(1, 0),
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 5),
+(1, 6),
+(1, 7);
 
 -- --------------------------------------------------------
 
@@ -323,7 +364,8 @@ ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
   ADD KEY `orders_order_status_id_fk` (`status_id`),
   ADD KEY `orders_users_id_fk` (`customer_id`),
-  ADD KEY `orders_users_id_fk_2` (`worker_id`);
+  ADD KEY `orders_users_id_fk_2` (`worker_id`),
+  ADD KEY `orders_carts_id_fk` (`cart_id`);
 
 --
 -- Indexes for table `order_status`
@@ -400,13 +442,13 @@ ALTER TABLE `blocked_lists`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -442,7 +484,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `recommended_lists`
 --
 ALTER TABLE `recommended_lists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -512,6 +554,7 @@ ALTER TABLE `items`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_carts_id_fk` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`),
   ADD CONSTRAINT `orders_order_status_id_fk` FOREIGN KEY (`status_id`) REFERENCES `order_status` (`id`),
   ADD CONSTRAINT `orders_users_id_fk` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `orders_users_id_fk_2` FOREIGN KEY (`worker_id`) REFERENCES `users` (`id`);
